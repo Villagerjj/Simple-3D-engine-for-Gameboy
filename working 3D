@@ -1,0 +1,137 @@
+#include <gb/gb.h>
+#include <stdint.h>
+#include <gb/drawing.h>
+#include <stdio.h>
+#include <stdlib.h>
+uint16_t angle = 0;
+uint8_t CUBE_SIZE = 5;
+
+#define WIDTH 160
+#define HEIGHT 144
+ 
+
+void render(int angle)
+{
+    int i;
+    int x1, y1, x2, y2;
+
+    // Define vertices of the cube
+    int vertices[8][3] = {
+        {0, 0, 0},
+        {0, 0, CUBE_SIZE},
+        {0, CUBE_SIZE, 0},
+        {0, CUBE_SIZE, CUBE_SIZE},
+        {CUBE_SIZE, 0, 0},
+        {CUBE_SIZE, 0, CUBE_SIZE},
+        {CUBE_SIZE, CUBE_SIZE, 0},
+        {CUBE_SIZE, CUBE_SIZE, CUBE_SIZE}
+    };
+
+    // Define lines that connect the vertices of the cube
+    int lines[12][2] = {
+        {0, 1},
+        {0, 2},
+        {0, 4},
+        {1, 3},
+        {1, 5},
+        {2, 3},
+        {2, 6},
+        {3, 7},
+        {4, 5},
+        {4, 6},
+        {5, 7},
+        {6, 7}
+    };
+
+    // Apply rotation to each vertex
+    for (i = 0; i < 8; i++)
+    {
+        int x = vertices[i][0];
+        int y = vertices[i][1];
+
+        vertices[i][0] = x * ((angle & 1) + ((angle & 2) >> 1)) + y * ((angle & 2) >> 1);
+        vertices[i][1] = y * ((angle & 1) + (angle & 2)) - x * ((angle & 2) >> 1);
+    }
+
+    // Loop through each line of the cube
+    for (i = 0; i < 12; i++)
+    {
+        x1 = vertices[lines[i][0]][0];
+        y1 = vertices[lines[i][0]][1];
+        x2 = vertices[lines[i][1]][0];
+        y2 = vertices[lines[i][1]][1];
+
+        // Project the line onto the 2D plane
+        x1 = (x1 * WIDTH / (vertices[lines[i][0]][2] + WIDTH));
+        y1 = (y1 * HEIGHT / (vertices[lines[i][0]][2] + HEIGHT));
+        x2 = (x2 * WIDTH / (vertices[lines[i][1]][2] + WIDTH));
+        y2 = (y2 * HEIGHT / (vertices[lines[i][1]][2] + HEIGHT));
+
+        // Draw the line on the screen
+        color(BLACK,BLACK,SOLID);
+       // line(x1 + 80, y1 + 72, x2 + 80, y2 + 72);
+        line(x1 + 10, y1  + 10, x2  + 10, y2  + 10);
+    }
+}
+
+void main(void)
+{
+    SHOW_BKG;
+    SHOW_SPRITES;
+
+    while (1)
+    {
+        render(angle);
+        uint8_t cur = joypad();
+
+        if (cur & J_A)
+        {
+        }
+
+        if (cur & J_B)
+        {
+        }
+
+        if (cur & J_SELECT)
+        {
+        }
+
+        if (cur & J_START)
+        {
+        }
+
+        if (cur & J_UP)
+        {
+            if(angle < 360)
+            {
+                angle++;
+            }
+            else{
+                angle = 0;
+            }
+            angle++;
+        }
+        else if (cur & J_DOWN)
+        {
+            if(angle > 0)
+            {
+                angle--;
+            }
+            else{
+                angle = 360;
+            }
+            angle--;
+        }
+
+        if (cur & J_LEFT)
+        {
+            CUBE_SIZE++;
+        }
+        else if (cur & J_RIGHT)
+        {
+            CUBE_SIZE--;
+        }
+
+        // display();
+    }
+}
