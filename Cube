@@ -1,0 +1,18 @@
+#define LINE_SIZE 30
+    uint16_t angles[3] = {10, 20, 30};
+#define POINT_AMOUNT 8
+#define SIDE_AMOUNT 12
+    const uint8_t sides[][2] = {
+        {7, 6},
+        {6, 0},
+        {0, 1},
+        {1, 7},
+        {7, 4},
+        {6, 5},
+        {0, 3},
+        {1, 2},
+        {4, 5},
+        {5, 3},
+        {3, 2},
+        {2, 4}};
+    Point3D points[POINT_AMOUNT] = {{LINE_SIZE, LINE_SIZE, 0}, {0, LINE_SIZE, 0}, {0, LINE_SIZE, LINE_SIZE}, {LINE_SIZE, LINE_SIZE, LINE_SIZE}, {0, 0, LINE_SIZE}, {LINE_SIZE, 0, LINE_SIZE}, {LINE_SIZE, 0, 0}, {0, 0, 0}};
